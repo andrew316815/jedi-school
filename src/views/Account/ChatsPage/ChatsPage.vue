@@ -6,17 +6,17 @@
         v-for="chat, idx in chats"
         :key="idx"
       )
-        ChatItem(
-          :chatItem="chat"
+        MessageItem(
+          :message="chat"
           @click="openChat"
           )
-    ChatElement( v-else )
+    ChatItem( v-else )
 </template>
 
 <script setup lang="ts">
 import { computed, defineComponent, ref } from 'vue'
+import MessageItem from './parts/MessageItem.vue'
 import ChatItem from './parts/ChatItem.vue'
-import ChatElement from './parts/ChatElement.vue'
 import store from '@/store'
 
 const chats = computed( () => store.getters.chats )

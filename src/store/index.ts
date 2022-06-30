@@ -1,13 +1,22 @@
 import { ChatFriend, MessageItem } from '@/types'
 import { createStore } from 'vuex'
 import axios from 'axios'
+import { now } from '@vueuse/core'
 
 export default createStore({
   state: {
     authHeader: '',
     url: 'http://labvm-42-12.itmo-lab.cosm-lab.science:8080/',
     hasError: false,
-    chatFriend: {} as ChatFriend,
+    chatFriend: {
+      id: 0,
+      username: 'Obi'
+    } as ChatFriend,
+    me: {
+      id: 0,
+      username: 'Кайло Рен'
+    } as ChatFriend,
+    idTracker: 0,
     user: {
       name: 'Кайло Рен',
       grade: '2 курс',
@@ -103,7 +112,7 @@ export default createStore({
       state.authHeader = authheader
     },
     setMessages( state, params: Array<MessageItem> ) {
-      state.messages = params
+      state.messages = state.messages.concat( params )
     },
     setError( state ) {
       state.hasError = true
@@ -165,6 +174,13 @@ export default createStore({
         await this.dispatch( 'getMessages' )
       } catch ( e ) {
         console.log( e )
+        this.commit( 'setMessages', [{
+          id: this.state.idTracker,
+          text: message,
+          sender: this.state.me,
+          dest: this.state.chatFriend,
+          created: new Date().toString()
+        }])
       }
     }
   },
